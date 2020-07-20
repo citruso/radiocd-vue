@@ -50,15 +50,14 @@ body {
     overflow-y: hidden;
     -webkit-user-select: none;
     user-select: none;
-    background: -webkit-linear-gradient(to top, #dddceb 0%, #e6c07a 75%);
-    background: -webkit-gradient(linear, to top, #dddceb 0%, #e6c07a 75%);
+    background: -webkit-linear-gradient(bottom, #dddceb 0%, #e6c07a 75%);
     background: linear-gradient(to top, #dddceb 0%, #e6c07a 75%);
 }
 section {
     position: absolute;
     width: fit-content;
     height: fit-content;
-    background-color: #af8740; /*#987536*/
+    background-color: #af8740;
     border: 2px solid rgba(0, 0, 0, 0.2);
     -webkit-border-radius: 15px;
     border-radius: 15px;
@@ -103,7 +102,6 @@ section #bar p {
     -webkit-text-stroke: thin;
     -webkit-user-select: initial;
     user-select: initial;
-    -webkit-text-rendering: geometricPrecision;
     text-rendering: geometricPrecision;
     -webkit-animation: blink 2s ease infinite;
     animation: blink 2s ease infinite;
