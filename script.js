@@ -5,23 +5,23 @@ const NODATA_MSG = 'Ошибка чтения метаданных';
 const ERROR_MSG = 'Ошибка воспроизведения';
 
 class Radio extends Audio {
-    constructor(streamUrl, metadataUrl, ...data) {
+    constructor(streamUrl, metadataUrl, args) {
         super();
         this.src = streamUrl;
         this.mdSrc = metadataUrl;
-        this.type = 'audio/mpeg';
         this.async = true;
         this.preload = 'none';
+        this.type = 'audio/mpeg';
         this.crossOrigin = 'anonymous';
         this.textNode = document.querySelector('#bar p');
-
-        for (let item in data[0]) {
-            this.constructor.prototype[item] = data[0][item];
+        
+        for (let item in args) {
+            this[item] = args[item];
         }
 
-        this.timeSong;
         this.timeDefault = 5000;
         this.timeError = 30000;
+        this.timeSong;
 
         this.onended = () => this.load();
         this.onerror = () => this.addText(this.ERROR_MSG);
@@ -47,10 +47,16 @@ class Radio extends Audio {
         }
     }
     volumeKnob(event) {
-        if (event.target.id == 'up' && this.volume < 1)
-            this.volume += 0.1;
-        else if (event.target.id == 'down' && this.volume > 0)
-            this.volume -= 0.1;
+        switch(event.target.id) {
+            case 'up': {
+                if (this.volume !== 1) this.volume += 0.1;
+                break;
+            }
+            case 'down': {
+                if (this.volume !== 0) this.volume -= 0.1;
+                break;
+            }
+        }
     }
     async start() {
         while (true) {
@@ -65,10 +71,10 @@ class Radio extends Audio {
         .then(data => {
             if (data) {
                 let artist = data.artist
-                .replace(/&Apos;/g, "'")
-                .replace(/[/]/g, 'feat.');
+                    .replace(/&Apos;/g, "'")
+                    .replace(/[/]/g, 'feat.');
                 let song = data.song
-                .replace(/&Apos;/g, "'");
+                    .replace(/&Apos;/g, "'");
 
                 if (artist || song) {
                     this.addText((artist && !song) ? artist : (!artist && song) ? song : `${artist} - ${song}`);
@@ -85,7 +91,7 @@ class Radio extends Audio {
     }
 }
 
-var radio = new Radio(STREAM_URL, METADATA_URL, {
+const radio = new Radio(STREAM_URL, METADATA_URL, {
     DEFAULT_MSG,
     NODATA_MSG,
     ERROR_MSG
