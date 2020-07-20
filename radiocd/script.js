@@ -12,6 +12,7 @@ class Radio extends Audio {
         this.type = 'audio/mpeg';
         this.async = true;
         this.preload = 'none';
+        this.crossOrigin = 'anonymous';
         this.textNode = document.querySelector('#bar p');
 
         for (let item in data[0]) {
