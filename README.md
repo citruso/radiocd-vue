@@ -1,2 +1,2 @@
-# Just a radio player based on <audio>
+# Just a radio player based on \<audio>
  
