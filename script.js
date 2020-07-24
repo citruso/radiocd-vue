@@ -25,18 +25,17 @@ class Radio extends Audio {
 
         this.onended = () => this.load();
         this.onerror = () => this.addText(this.ERROR_MSG);
-        this.onvolumechange = () => this.volume = this.volume.toFixed(1);
+        this.onvolumechange = () => (this.volume = this.volume.toFixed(1));
     }
     addText(text) {
         this.textNode.innerHTML = text;
     }
     copy() {
         let range = document.createRange();
-        let slc = window.getSelection();
         range.selectNode(this.textNode);
-        slc.addRange(range);
+        window.getSelection().addRange(range);
         document.execCommand('copy');
-        slc.removeAllRanges();
+        window.getSelection().removeAllRanges();
     }
     playback() {
         if (this.paused) {
