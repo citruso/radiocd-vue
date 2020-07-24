@@ -68,7 +68,7 @@ section #disc.running {
 }
 section #bar {
     display: flex;
-    width: calc(var(--disc) - 5vmin);
+    width: calc(var(--disc) - 7vmin);
     height: 6vmin;
     background-color: #222;
     vertical-align: top;
@@ -102,7 +102,7 @@ section #bar:hover p {
 }
 section #knob {
     display: flex;
-    width: 4vmin;
+    width: 6vmin;
     background-color: #222;
     margin-left: 1vmin;
     cursor: pointer;
@@ -112,7 +112,7 @@ section #knob {
 }
 section #knob #up, section #knob #down {
     position: absolute;
-    width: 4vmin;
+    width: 6vmin;
     height: 3vmin;
     background: url(st.svg) no-repeat center;
     background-size: contain;
