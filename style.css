@@ -1,26 +1,6 @@
-/* media styles */
-@media screen and (max-width: 320px) {
-    section { padding: 5px 5px 10px 5px; }
-    section #disc { width: 100px; height: 100px; margin: 0 auto 10px auto; }
-    section #bar { width: 100px; height: 20px; }
-    section #bar p { font-size: 6px; }
-    section #knob { display: none; }
-}
-@media screen and (min-width: 320px) {
-    section { padding: 15px 15px 20px 15px; }
-    section #disc { width: 200px; height: 200px; margin: 0 auto 25px auto; }
-    section #bar { width: 150px; height: 35px; }
-    section #bar p { font-size: 11px; }
-    section #knob { width: 35px; height: 35px; display: inline-block; }
-    section #knob #up, section #knob #down { width: 35px; height: 17px; }
-}
-@media screen and (min-width: 620px) {
-    section { padding: 25px 25px 30px 25px; }
-    section #disc { width: 400px; height: 400px; margin: 0 auto 25px auto; }
-    section #bar { width: 320px; height: 50px; }
-    section #bar p { font-size: 16px; }
-    section #knob { width: 50px; height: 50px; display: inline-block; }
-    section #knob #up, section #knob #down { width: 50px; height: 25px; }
+/* vars */
+:root {
+    --disc: 70vmin;
 }
 
 /* animation */
@@ -41,8 +21,12 @@
 }
 
 /* dom styles */
-body {
+*, *::before, *::after {
     margin: 0;
+    padding: 0;
+    border: 0;
+}
+body {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -55,23 +39,26 @@ body {
 }
 section {
     position: absolute;
-    width: fit-content;
-    height: fit-content;
-    background-color: #af8740;
-    border: 2px solid rgba(0, 0, 0, 0.2);
-    -webkit-border-radius: 15px;
-    border-radius: 15px;
-    -webkit-box-shadow: 15px 12px rgba(0, 0, 0, 0.2);
-    box-shadow: 15px 12px rgba(0, 0, 0, 0.2);
+    display: flex;
+    flex-wrap: wrap;
+    width: min-content;
+    padding: 3vmin;
+    background-color: #af8740; /*#987536*/
+    border: 0.5vmin solid rgba(0, 0, 0, 0.2);
+    -webkit-border-radius: 2vmin;
+    border-radius: 2vmin;
+    -webkit-box-shadow: 1.5vmin 1vmin rgba(0, 0, 0, 0.2);
+    box-shadow: 1.5vmin 1vmin rgba(0, 0, 0, 0.2);
 }
 section #disc {
+    width: var(--disc);
+    height: var(--disc);
     cursor: pointer;
-    background-image: url(disc.svg);
+    margin-bottom: 3vmin;
+    background: url(disc.svg) no-repeat center;
     -webkit-tap-highlight-color: transparent;
     -webkit-transform: rotate(0deg);
     transform: rotate(0deg);
-    -webkit-border-radius: 400px;
-    border-radius: 400px;
     -webkit-animation: rotate 5s linear infinite;
     animation: rotate 5s linear infinite;
     animation-play-state: paused;
@@ -80,25 +67,28 @@ section #disc.running {
     animation-play-state: running;
 }
 section #bar {
+    display: flex;
+    width: calc(var(--disc) - 7vmin);
+    height: 6vmin;
     background-color: #222;
-    display: inline-block;
     vertical-align: top;
     cursor: pointer;
     overflow: hidden;
-    -webkit-border-radius: 7px;
-    border-radius: 7px;
+    -webkit-border-radius: 1vmin;
+    border-radius: 1vmin;
 }
-section #bar:active { outline: 3px dashed #222; }
+section #bar:active { outline: 0.65vmin dashed #222; }
 section #bar p {
+    font-size: 2.5vmin;
+    margin: auto;
     color: #eaeaea;
     text-align: center;
     text-overflow: ellipsis;
-    position: relative;
     font-family: 'Ubuntu';
     white-space: nowrap;
     overflow: hidden;
-    padding: 0 15px 0 15px;
-    letter-spacing: 1px;
+    padding: 0 1vw 0 1vw;
+    letter-spacing: 0.3vmin;
     -webkit-text-stroke: thin;
     -webkit-user-select: initial;
     user-select: initial;
@@ -111,24 +101,28 @@ section #bar:hover p {
     animation: none;
 }
 section #knob {
-    position: relative;
+    display: flex;
+    width: 6vmin;
     background-color: #222;
-    margin-left: 5%;
+    margin-left: 1vmin;
     cursor: pointer;
-    -webkit-border-radius: 7px;
-    border-radius: 7px;
+    -webkit-border-radius: 1vmin;
+    border-radius: 1vmin;
+    -webkit-tap-highlight-color: transparent;
 }
 section #knob #up, section #knob #down {
     position: absolute;
+    width: 6vmin;
+    height: 3vmin;
     background: url(st.svg) no-repeat center;
     background-size: contain;
 }
 section #knob #down {
-    top: 50%;
+    align-self: flex-end;
     -webkit-transform: rotate(180deg);
     transform: rotate(180deg);
 }
-section #knob #up:active {
+section #knob #up:active, section #knob #down:active {
     -webkit-transform: scale(0.9);
     transform: scale(0.9);
 }
