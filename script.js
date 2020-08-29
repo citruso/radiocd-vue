@@ -5,26 +5,22 @@ const NODATA_MSG = 'Ошибка чтения метаданных';
 const ERROR_MSG = 'Ошибка воспроизведения';
 
 class Radio extends Audio {
-    constructor(streamUrl, metadataUrl, args) {
+    constructor(streamUrl, metadataUrl, info) {
         super();
         this.src = streamUrl;
         this.mdSrc = metadataUrl;
+        this.info = info;
         this.async = true;
         this.preload = 'none';
         this.type = 'audio/mpeg';
         this.crossOrigin = 'anonymous';
         this.textNode = document.querySelector('#bar p');
-        
-        for (let item in args) {
-            this[item] = args[item];
-        }
 
         this.timeDefault = 5000;
         this.timeError = 30000;
-        this.timeSong;
 
         this.onended = () => this.load();
-        this.onerror = () => this.addText(this.ERROR_MSG);
+        this.onerror = () => this.addText(this.info.ERROR_MSG);
         this.onvolumechange = () => (this.volume = this.volume.toFixed(1));
     }
     addText(text) {
@@ -46,7 +42,7 @@ class Radio extends Audio {
         }
     }
     volumeKnob(event) {
-        switch(event.target.id) {
+        switch (event.target.id) {
             case 'up': {
                 if (this.volume !== 1) this.volume += 0.1;
                 break;
@@ -59,34 +55,38 @@ class Radio extends Audio {
     }
     async start() {
         while (true) {
-            this.timeSong = await this.update();
-            if (!this.timeSong) break;
-            await new Promise(ok => setTimeout(ok, this.timeSong));
+            this.update()
+                .then(time => {
+                    if (time)
+                        await new Promise(ok => setTimeout(ok, time));
+                    else
+                        break;
+                });
         }
     }
     update() {
         return fetch(this.mdSrc)
-        .then(r => r.ok ? r.json() : false)
-        .then(data => {
-            if (data) {
-                let artist = data.artist
-                    .replace(/&Apos;/g, "'")
-                    .replace(/[/]/g, 'feat.');
-                let song = data.song
-                    .replace(/&Apos;/g, "'");
+            .then(r => r.ok ? r.json() : false)
+            .then(data => {
+                if (data) {
+                    let artist = data.artist
+                        .replace(/&Apos;/g, "'")
+                        .replace(/[/]/g, 'feat.');
+                    let song = data.song
+                        .replace(/&Apos;/g, "'");
 
-                if (artist || song) {
-                    this.addText((artist && !song) ? artist : (!artist && song) ? song : `${artist} - ${song}`);
-                    return (data.playlist[0].duration - ~~(new Date()/1000 - data.playlist[0].start_ts)) * 1000;
+                    if (artist || song) {
+                        this.addText((artist && !song) ? artist : (!artist && song) ? song : `${artist} - ${song}`);
+                        return (data.playlist[0].duration - ~~(new Date() / 1000 - data.playlist[0].start_ts)) * 1000;
+                    } else {
+                        this.addText(this.info.DEFAULT_MSG);
+                        return this.timeDefault;
+                    }
                 } else {
-                    this.addText(this.DEFAULT_MSG);
-                    return this.timeDefault;
+                    this.addText(this.info.NODATA_MSG);
+                    return this.timeError;
                 }
-            } else {
-                this.addText(this.NODATA_MSG);
-                return this.timeError;
-            }
-        });
+            });
     }
 }
 
@@ -96,8 +96,8 @@ const radio = new Radio(STREAM_URL, METADATA_URL, {
     ERROR_MSG
 });
 
-window.onload = function() {
+window.onload = function () {
     let cd = document.querySelector('#disc');
-    cd.addEventListener('click', () => radio.start(), {'once': true});
+    cd.addEventListener('click', () => radio.start(), { 'once': true });
     cd.removeAttribute('style');
 };
