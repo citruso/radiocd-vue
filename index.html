@@ -1,26 +1,32 @@
 <!doctype html>
 <html>
-    <head>
-        <title>Радио</title>
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-        <meta property="og:title" content="Радио Онлайн"/>
-        <meta property="og:url" content="http://radiocd.fun"/>
-        <meta property="og:type" content="music.radio_station"/>
-        <link rel="stylesheet" href="style.css" type="text/css">
-        <link rel="apple-touch-icon" href="apple-touch-icon.png">
-        <link rel="shortcut icon" href="fav_play.ico" type="image/x-icon">
-        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Ubuntu" type="text/css">
-        <script async src="script.js"></script>
-    </head>
-    <body>
-        <section>
-            <div id="disc" onclick="radio.playback(); this.classList.toggle('running');" class="" style="pointer-events: none;"></div>
-            <div id="bar" onclick="radio.copy();"><p>↑ Нажми CD ↑</p></div>
-            <div id="knob" onclick="radio.volumeKnob(event);">
-                <div id="up"></div>
-                <div id="down"></div>
-            </div>
-        </section>
-    </body>
+
+<head>
+    <title>Радио</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta property="og:title" content="Радио Онлайн" />
+    <meta property="og:url" content="http://radiocd.fun" />
+    <meta property="og:type" content="music.radio_station" />
+    <link rel="stylesheet" href="style.css" type="text/css">
+    <link rel="apple-touch-icon" href="apple-touch-icon.png">
+    <link rel="shortcut icon" href="fav_play.ico" type="image/x-icon">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Ubuntu" type="text/css">
+    <script async src="script.js"></script>
+</head>
+
+<body>
+    <section>
+        <div id="disc" onclick="radio.playback(); this.classList.toggle('running');" class=""
+            style="pointer-events: none;"></div>
+        <div id="bar" onclick="radio.copy();">
+            <p>↑ Нажми CD ↑</p>
+        </div>
+        <div id="knob" onclick="radio.volumeKnob(event);">
+            <div id="up"></div>
+            <div id="down"></div>
+        </div>
+    </section>
+</body>
+
 </html>
