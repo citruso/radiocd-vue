@@ -1,1 +1,1 @@
-# Just a radio player based on \<audio>
+# Radio player based on Vue [Vuex]
