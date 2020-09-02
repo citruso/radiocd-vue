@@ -26,6 +26,7 @@ export default {
   width: 70vmin;
   height: 70vmin;
   cursor: pointer;
+  border-radius: 50%;
   margin-bottom: 3vmin;
   background: url(../assets/disc.svg) no-repeat center;
   -webkit-tap-highlight-color: transparent;
