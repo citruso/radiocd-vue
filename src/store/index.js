@@ -42,6 +42,11 @@ export default new Vuex.Store({
         state.audio.volume -= 0.1;
     }
   },
+  getters: {
+    getTimeLeft: state => (start_ts, duration) => {
+      return (duration - ~~(new Date() / 1000 - start_ts)) * 1000; // "~~" - cut off float (parseInt)
+    },
+  },
   actions: {
     togglePlay: ({ state, commit }) => {
       if (state.audio.paused) {
@@ -52,38 +57,35 @@ export default new Vuex.Store({
       }
       commit('setPlaying');
     },
-    loop: ({ dispatch }) => {
-      dispatch('updateData')
-        .then(time => time ? setTimeout(() => dispatch('loop'), time) : false);
+    loop: async ({ dispatch }) => {
+      const timeLeft = await dispatch('updateData');
+      setTimeout(() => dispatch('loop'), timeLeft);
     },
-    updateData: ({ commit }) => {
+    getRadioMeta: () => {
       return fetch(METADATA_URL)
-        .then(r => r.ok ? r.json() : false)
-        .then(data => {
-          if (data) {
-            let artist = data.artist
-              .replace(/&Apos;/g, "'")
-              .replace(/[/]/g, 'feat.');
-            let song = data.song
-              .replace(/&Apos;/g, "'");
+        .then(response => response.ok ? response.json() : false);
+    },
+    updateData: async ({ getters, dispatch, commit }) => {
+      const data = await dispatch('getRadioMeta');
+      const [artist, song] = [data?.artist, data?.song];
+      const timeLeft = getters.getTimeLeft(
+        data?.playlist[0]?.start_ts,
+        data?.playlist[0]?.duration
+      )
 
-            if (artist || song) {
-              commit('setTitle',
-                (artist && !song)
-                  ? artist : (!artist && song)
-                    ? song : `${artist} - ${song}`
-              );
+      if (!data) {
+        commit('setTitle', NODATA_MSG);
+        return ERROR_TIME;
+      }
 
-              return (data.playlist[0].duration - ~~(new Date() / 1000 - data.playlist[0].start_ts)) * 1000;
-            } else {
-              commit('setTitle', DEFAULT_MSG);
-              return DEFAULT_TIME;
-            }
-          } else {
-            commit('setTitle', NODATA_MSG);
-            return ERROR_TIME;
-          }
-        });
+      if (!artist && !song || timeLeft < 0) {
+        commit('setTitle', DEFAULT_MSG);
+        return DEFAULT_TIME;
+      }
+
+      commit('setTitle', `${artist} — ${song}`);
+
+      return timeLeft;
     }
   }
 })
